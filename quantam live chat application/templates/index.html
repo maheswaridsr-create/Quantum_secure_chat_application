@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum-Enhanced Secure Chat</title>
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- --- LANDING / ROOM JOIN PAGE --- -->
+    <div id="landing-screen" class="landing-container">
+        <div class="landing-card">
+            <div class="logo-icon">
+                <i class="fa-solid fa-atom"></i>
+            </div>
+            <h1 class="landing-title">Quantum Crypt-Chat</h1>
+            <p class="landing-subtitle">Quantum-Enhanced Secure Real-Time Messaging</p>
+            
+            <form id="join-form">
+                <div class="form-group">
+                    <label for="username">Secure Alias</label>
+                    <div class="input-glow-wrapper">
+                        <input type="text" id="username" class="form-control" placeholder="e.g. Alice" required autocomplete="off">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="room-id">Quantum Node ID (Room)</label>
+                    <div class="input-glow-wrapper">
+                        <input type="text" id="room-id" class="form-control" placeholder="e.g. alpha-node" required autocomplete="off">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-glowing">
+                    <i class="fa-solid fa-network-wired" style="margin-right: 8px;"></i>
+                    Initialize Secure Link
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- --- MAIN APPLICATION DASHBOARD --- -->
+    <div id="chat-dashboard" class="dashboard">
+        
+        <!-- SIDEBAR: ROOM & PRESENCE -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-shield-halved" style="color: var(--accent-cyan); font-size: 1.25rem;"></i>
+                <span class="sidebar-logo">QUANTUM NODE</span>
+            </div>
+            
+            <div class="room-info-card">
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">ACTIVE NODE</div>
+                <div id="current-room-display" class="room-badge">Loading...</div>
+            </div>
+            
+            <div class="user-list-container">
+                <div class="section-label">
+                    <span>Connected Nodes</span>
+                    <span id="user-count" class="user-count-badge">0</span>
+                </div>
+                <div id="user-list">
+                    <!-- User items populated dynamically by JS -->
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button id="btn-rotate-key" class="btn-secondary btn-rotate">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    Rotate Session Key
+                </button>
+                <button id="btn-leave" class="btn-secondary">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Disconnect
+                </button>
+            </div>
+        </aside>
+
+        <!-- CHAT PANEL: FEED & INPUT -->
+        <main class="chat-panel">
+            <header class="chat-header">
+                <div class="chat-room-title">
+                    <i class="fa-regular fa-comments" style="color: var(--text-secondary); margin-right: 8px;"></i>
+                    Encrypted Feed
+                </div>
+                <div id="key-status" class="key-status-indicator">
+                    <i class="fa-solid fa-lock"></i>
+                    <span id="key-status-text">Securing...</span>
+                </div>
+            </header>
+            
+            <div id="chat-history" class="chat-history">
+                <!-- Messages populated dynamically by JS -->
+            </div>
+            
+            <div class="chat-input-area">
+                <form id="chat-form" class="chat-input-form">
+                    <input type="text" id="message-input" placeholder="Type a secure message..." required autocomplete="off">
+                    <button type="submit" class="btn-send">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <!-- INSPECTOR PANEL: QUANTUM DIAGNOSTICS -->
+        <aside class="inspector-panel">
+            <div class="inspector-header">
+                <div class="pulse-indicator"></div>
+                <h2 class="inspector-title">Quantum Inspector</h2>
+            </div>
+            
+            <!-- Quantum Circuit diagram -->
+            <div class="inspector-section">
+                <h3 class="inspector-subtitle">Qiskit Circuit Model</h3>
+                <div class="circuit-visualizer-container">
+                    <pre id="circuit-diagram" class="circuit-visualizer">Loading Circuit...</pre>
+                </div>
+            </div>
+            
+            <!-- Raw Binary stream -->
+            <div class="inspector-section">
+                <h3 class="inspector-subtitle">Collapsed Binary Stream (256-bit)</h3>
+                <div id="binary-stream" class="binary-stream-box">
+                    <!-- Dynamic floating bits -->
+                </div>
+            </div>
+            
+            <!-- Measurement Stats -->
+            <div class="inspector-section">
+                <h3 class="inspector-subtitle">Simulation Stats</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Entropy</div>
+                        <div id="stat-entropy" class="stat-value glow-green">0.0000</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">0 / 1 Ratio</div>
+                        <div id="stat-ratio" class="stat-value">0/0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Qubits Measured</div>
+                        <div id="stat-qubits" class="stat-value glow-cyan">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Circuit Shots</div>
+                        <div id="stat-shots" class="stat-value">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Derived Session Key -->
+            <div class="inspector-section">
+                <h3 class="inspector-subtitle">Derived AES Session Key</h3>
+                <div class="key-box-container">
+                    <i class="fa-solid fa-key"></i>
+                    <div id="session-key-display" class="key-value">Uninitialized</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- --- CRYPTOGRAPHIC INSPECTION MODAL --- -->
+    <div id="crypto-modal" class="modal-overlay">
+        <div class="modal-card">
+            <header class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fa-solid fa-unlock-keyhole"></i>
+                    Decryption Inspection
+                </h2>
+                <button id="btn-close-modal" class="btn-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </header>
+            
+            <div class="modal-body">
+                <div class="modal-data-row">
+                    <div class="modal-data-label">Original Plaintext</div>
+                    <div id="modal-plaintext" class="modal-data-value decrypted"></div>
+                </div>
+                
+                <div class="modal-data-row">
+                    <div class="modal-data-label">Ciphertext (Base64)</div>
+                    <div id="modal-ciphertext" class="modal-data-value"></div>
+                </div>
+                
+                <div class="modal-data-row">
+                    <div class="modal-data-label">Initialization Vector (IV - Hex)</div>
+                    <div id="modal-iv" class="modal-data-value"></div>
+                </div>
+                
+                <div class="modal-data-row">
+                    <div class="modal-data-label">Authentication Tag (GCM - Hex)</div>
+                    <div id="modal-tag" class="modal-data-value"></div>
+                </div>
+                
+                <div class="modal-data-row">
+                    <div class="modal-data-label">AES Decryption Session Key (Hex)</div>
+                    <div id="modal-key" class="modal-data-value"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- TOAST KEY ROTATION NOTIFICATION --- -->
+    <div id="toast-notification" class="toast-notification">
+        <div class="toast-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div id="toast-text" class="toast-text">Key rotated successfully!</div>
+    </div>
+
+    <!-- Socket.IO library from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+    
+    <!-- Client Application Logic -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
